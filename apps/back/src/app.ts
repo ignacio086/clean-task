@@ -1,4 +1,5 @@
 import express from "express";
+import { taskRouter } from "./routes/routes";
 
 const app = express();
 
@@ -10,6 +11,8 @@ app.get("/ping", (_req, res) => {
   console.log("ping");
   res.json({ nombre: "juan" });
 });
+
+app.use("/task", taskRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

@@ -1,21 +1,27 @@
-import Image from "next/image";
+
+import { Task } from "../schema/taskSchema";
+
 
 async function getData() {
-  const res = await fetch("http://localhost:3005/ping");
-  const data = res.json();
-  return data;
+  const res = await fetch("http://localhost:3000/api/task").then(res=>res.json()).then(data=>data);
+  return res.data
 }
 export default async function Home() {
-  let { nombre } = await getData();
-  console.log(nombre);
+  let nombre:TaskWeb[] = await getData();
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">{nombre}</code>
-        </p>
-      </div>
+    <main className="flex min-h-screen flex-col gap-8 items-center justify-between p-24">
+      {
+        nombre.map((task:TaskWeb) => (
+          <div className={`w-1/2 flex flex-col justify-around rounded-xl h-96 p-8 bg-slate-800 text-white `} key={task.id}>
+            <div className="flex justify-between">
+              <h1 className={`${task.done?'line-through':''} text-5xl`}>{task.title}</h1>
+              <a href="/2" className={`border-2 border-slate-600 hover:bg-slate-600 w-auto h-12 p-2 rounded-xl text-xs`}>Editar</a>
+            </div>
+            <p className={`${task.done?'line-through':''}`}>{task.description}</p>
+          </div>
+        ))
+      }
     </main>
   );
 }
